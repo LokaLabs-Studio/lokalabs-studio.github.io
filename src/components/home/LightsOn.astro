@@ -1,0 +1,107 @@
+---
+import StaggerHeading from '../StaggerHeading.astro';
+import MoneyLedger from '../apps/MoneyLedger.astro';
+---
+
+<section class="lights" aria-labelledby="lights-title">
+  <div class="container lights__grid">
+    <div class="lights__intro">
+      <StaggerHeading id="lights-title" class="lights__title" text="How we keep the lights on." />
+      <p class="lights__lead" data-reveal>
+        Free apps still cost money to make. Here is the whole business model, with nothing left out.
+      </p>
+    </div>
+
+    <div class="lights__table">
+      <MoneyLedger caption="How LiftLab is paid for" />
+      <div class="lights__never" data-reveal>
+        <p class="label">What we won’t do</p>
+        <ul role="list">
+          <li>Sell or share your data</li>
+          <li>Charge you every month</li>
+          <li>Play an ad you didn’t ask for</li>
+        </ul>
+      </div>
+      <p class="lights__foot">
+        The ad comes from Google’s ad SDK, which is part of the app. The <a href="/apps/liftlab/privacy/"
+          ><span translate="no">LiftLab</span> privacy policy</a
+        >{' '}explains exactly what it can see.
+      </p>
+    </div>
+  </div>
+</section>
+
+<style>
+  .lights {
+    padding-block: var(--section);
+    background: var(--bg-raised);
+    border-block: 1px solid var(--line);
+  }
+  .lights__grid {
+    display: grid;
+    gap: var(--s-7);
+  }
+  .lights__intro {
+    display: grid;
+    gap: var(--s-4);
+    align-content: start;
+  }
+  .lights__title {
+    font-size: var(--step-3);
+    line-height: 0.98;
+    letter-spacing: -0.04em;
+    max-width: 12ch;
+  }
+  .lights__lead {
+    font-size: var(--step-1);
+    color: var(--ink-2);
+    max-width: 30ch;
+  }
+  .lights__table {
+    display: grid;
+    gap: var(--s-6);
+    min-width: 0;
+  }
+  .lights__never {
+    display: grid;
+    gap: var(--s-3);
+  }
+  .lights__never ul {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--s-2);
+  }
+  .lights__never li {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--s-2);
+    padding: var(--s-2) var(--s-4);
+    border-radius: var(--r-pill);
+    background: var(--bg);
+    border: 1px solid var(--line);
+    font-weight: 500;
+  }
+  .lights__never li::before {
+    content: '';
+    width: 0.625rem;
+    height: 2px;
+    background: currentColor;
+  }
+  .lights__foot {
+    font-size: var(--step--1);
+    color: var(--ink-2);
+    max-width: 60ch;
+  }
+
+  @media (min-width: 64rem) {
+    .lights__grid {
+      grid-template-columns: 4fr 8fr;
+      column-gap: var(--s-8);
+    }
+    .lights__intro {
+      position: sticky;
+      top: calc(var(--header-h) + var(--s-7));
+      align-self: start;
+    }
+  }
+</style>

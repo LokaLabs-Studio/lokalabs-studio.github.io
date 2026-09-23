@@ -1,0 +1,316 @@
+---
+import type { MarkdownHeading } from 'astro';
+import type { CollectionEntry } from 'astro:content';
+import { Image } from 'astro:assets';
+import BaseLayout from './BaseLayout.astro';
+import Toc from '../components/legal/Toc.astro';
+import DocList from '../components/apps/DocList.astro';
+import Icon from '../components/Icon.astro';
+import { formatDate, isoDate } from '../lib/format';
+import { SITE } from '../lib/site';
+import type { App } from '../lib/apps';
+import type { DocKind } from '../content.config';
+
+interface Props {
+  doc: CollectionEntry<'legal'>;
+  app: App;
+  headings: MarkdownHeading[];
+}
+const { doc, app, headings } = Astro.props;
+const d = doc.data;
+---
+
+<BaseLayout
+  title={`${d.title} · ${app.data.name}`}
+  description={d.description}
+  page="legal"
+  app={app.id}
+  navCurrent="/legal/"
+>
+  <article class="legal container" aria-labelledby="doc-title">
+    <header class="legal__head">
+      <nav class="legal__crumbs label" aria-label="Breadcrumb">
+        <a href="/legal/">Legal</a>
+        <span aria-hidden="true">/</span>
+        <a href={`/apps/${app.id}/`} translate="no">{app.data.name}</a>
+        <span aria-hidden="true">/</span>
+        <span aria-current="page">{d.title}</span>
+      </nav>
+
+      <a class="legal__chip on-app" data-app-theme={app.id} href={`/apps/${app.id}/`}>
+        <Image src={app.data.icon} alt="" width={28} height={28} densities={[1, 2]} loading="eager" class="legal__chip-icon" />
+        <span><span translate="no">{app.data.name}</span> by <span translate="no">Loka Labs</span></span>
+      </a>
+
+      <h1 id="doc-title" class="legal__title">{d.title}</h1>
+      <p class="legal__meta">
+        <span>Version {d.version}</span>
+        <span class="legal__sep" aria-hidden="true">·</span>
+        <span>Last updated <time datetime={isoDate(d.updated)}>{formatDate(d.updated)}</time></span>
+      </p>
+      <p class="legal__print-url">{new URL(Astro.url.pathname, Astro.site).href}</p>
+    </header>
+
+    <div class="legal__grid">
+      <aside class="legal__aside">
+        <Toc headings={headings} />
+      </aside>
+
+      <div class="legal__body">
+        <section class="summary" aria-labelledby="summary-title">
+          <h2 id="summary-title" class="summary__title">The short version</h2>
+          <ul role="list">
+            {d.summary.map((s) => <li>{s}</li>)}
+          </ul>
+        </section>
+
+        <div class="prose legal__prose">
+          <slot />
+        </div>
+
+        {
+          d.changes.length > 0 && (
+            <section class="history" aria-labelledby="history-title">
+              <h2 id="history-title" class="label">Version history</h2>
+              <ol role="list">
+                {d.changes.map((c) => (
+                  <li>
+                    <span class="history__v">{c.version}</span>
+                    <time datetime={isoDate(c.date)}>{formatDate(c.date)}</time>
+                    <span>{c.note}</span>
+                  </li>
+                ))}
+              </ol>
+            </section>
+          )
+        }
+
+        <section class="siblings" aria-labelledby="siblings-title">
+          <h2 id="siblings-title" class="label">
+            Other <span translate="no">{app.data.name}</span> documents
+          </h2>
+          <DocList app={app} current={d.kind as DocKind} />
+          <p class="siblings__contact">
+            Questions about this document? Write to <a href={`mailto:${SITE.email}`}>{SITE.email}</a>.
+          </p>
+          <a class="siblings__back" href={`/apps/${app.id}/`}>
+            <Icon name="arrow-left" size="1.125rem" />
+            <span>Back to <span translate="no">{app.data.name}</span></span>
+          </a>
+        </section>
+      </div>
+    </div>
+  </article>
+</BaseLayout>
+
+<style>
+  .legal {
+    padding-block: var(--s-7) var(--section);
+  }
+  .legal__head {
+    display: grid;
+    justify-items: start;
+    gap: var(--s-4);
+    padding-bottom: var(--s-7);
+    margin-bottom: var(--s-7);
+    border-bottom: 1px solid var(--line);
+  }
+  .legal__crumbs {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--s-2);
+  }
+  .legal__crumbs a {
+    color: var(--ink-2);
+  }
+  .legal__crumbs a:hover {
+    color: var(--ink);
+  }
+  .legal__chip {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--s-2);
+    margin-top: var(--s-4);
+    padding: 0.3rem var(--s-4) 0.3rem 0.3rem;
+    border-radius: var(--r-pill);
+    background: var(--app-bg);
+    border: 1px solid var(--app-border);
+    color: var(--app-text);
+    font-size: var(--step--1);
+    font-weight: 500;
+    text-decoration: none;
+  }
+  .legal__chip-icon {
+    width: 1.75rem;
+    height: 1.75rem;
+    border-radius: 50%;
+  }
+  .legal__title {
+    font-size: var(--step-3);
+    line-height: 1;
+    letter-spacing: -0.04em;
+  }
+  .legal__meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--s-2);
+    font-family: var(--font-code);
+    font-size: var(--step--1);
+    color: var(--ink-2);
+  }
+  .legal__print-url {
+    display: none;
+  }
+  @media (max-width: 29.99rem) {
+    .legal__meta {
+      flex-direction: column;
+      gap: 0;
+    }
+    .legal__sep {
+      display: none;
+    }
+  }
+
+  .legal__grid {
+    display: grid;
+    gap: var(--s-6);
+  }
+  .legal__body {
+    display: grid;
+    gap: var(--s-8);
+    min-width: 0;
+  }
+
+  .summary {
+    position: relative;
+    max-width: var(--measure);
+    padding: var(--s-5) var(--s-5) var(--s-5) calc(var(--s-5) + 1.25rem);
+    border: 1px solid var(--line);
+    border-radius: var(--r-md);
+    background: var(--bg-raised);
+    break-inside: avoid;
+  }
+  .summary::before,
+  .summary::after {
+    content: '';
+    position: absolute;
+    top: var(--s-5);
+    bottom: var(--s-5);
+    background: var(--brand);
+  }
+  .summary::before {
+    left: var(--s-5);
+    width: 0.4rem;
+  }
+  .summary::after {
+    left: calc(var(--s-5) + 0.55rem);
+    width: 0.1rem;
+  }
+  .summary__title {
+    font-size: var(--step-1);
+    font-weight: 700;
+    letter-spacing: -0.015em;
+    margin-bottom: var(--s-3);
+  }
+  .summary ul {
+    display: grid;
+    gap: var(--s-2);
+  }
+  .summary li {
+    position: relative;
+    padding-left: var(--s-4);
+  }
+  .summary li::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0.8em;
+    width: 0.5rem;
+    height: 1px;
+    background: var(--ink-3);
+  }
+
+  .history ol {
+    display: grid;
+    border-top: 1px solid var(--line);
+    max-width: var(--measure);
+  }
+  .history li {
+    display: grid;
+    grid-template-columns: 3rem 10rem 1fr;
+    gap: var(--s-3);
+    padding-block: var(--s-3);
+    border-bottom: 1px solid var(--line);
+    font-size: var(--step--1);
+    color: var(--ink-2);
+  }
+  .history__v {
+    font-family: var(--font-code);
+    color: var(--ink);
+  }
+  .history .label,
+  .siblings .label {
+    margin-bottom: var(--s-3);
+  }
+
+  .siblings {
+    display: grid;
+    gap: var(--s-4);
+    max-width: var(--measure);
+  }
+  .siblings .label {
+    margin-bottom: 0;
+  }
+  .siblings__contact {
+    color: var(--ink-2);
+  }
+  .siblings__back {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--s-2);
+    width: fit-content;
+    min-height: 2.75rem;
+    font-weight: 500;
+    color: var(--ink);
+    text-decoration: none;
+  }
+  .siblings__back:hover span {
+    text-decoration: underline;
+  }
+
+  @media (max-width: 40rem) {
+    .history li {
+      grid-template-columns: 3rem 1fr;
+    }
+    .history li > span:last-child {
+      grid-column: 2;
+    }
+  }
+
+  @media (min-width: 64rem) {
+    .legal__grid {
+      grid-template-columns: 15rem minmax(0, 1fr);
+      column-gap: var(--s-9);
+    }
+    .legal__aside {
+      order: 0;
+    }
+  }
+
+  @media print {
+    .legal__print-url {
+      display: block;
+      font-family: var(--font-code);
+      font-size: 9pt;
+    }
+    .legal__aside,
+    .legal__chip,
+    .legal__crumbs,
+    .siblings__back {
+      display: none !important;
+    }
+    .legal__grid {
+      display: block;
+    }
+  }
+</style>

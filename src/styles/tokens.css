@@ -1,0 +1,93 @@
+@layer tokens {
+  :root {
+    color-scheme: light dark;
+
+    --brand: #2563eb;
+    --on-brand: #ffffff;
+    --on-brand-2: #e9e9e6;
+    --bg: light-dark(#f7f6f3, #0a0c10);
+    --bg-raised: light-dark(#fbfbfa, #12161d);
+    --bg-sunken: light-dark(#efeeea, #07080b);
+
+    --ink: light-dark(#111111, #f2f5f9);
+    --ink-2: light-dark(#6b6a66, #8b95a7);    --ink-3: light-dark(#787774, #5a6475);
+    --line: light-dark(#e6e5e1, #1c222c);
+    --line-strong: light-dark(#d4d3ce, #2a3240);
+
+    --link: light-dark(#2563eb, #5b8cff);
+    --focus: var(--link);
+    --selection: light-dark(#dbe6fd, #1b2c55);
+
+    --mark-heavy: var(--ink);
+    --mark-light: light-dark(#787774, #8b95a7);
+
+    --font-display: var(--font-mona), 'Arial', sans-serif;
+    --font-sans: var(--font-body), 'Arial', sans-serif;
+    --font-code: var(--font-mono), ui-monospace, monospace;
+
+    --step-hero: clamp(3rem, 1.4rem + 6.4vw, 7rem);
+    --step-3: clamp(2.25rem, 1.5rem + 3vw, 4rem);
+    --step-2: clamp(1.625rem, 1.35rem + 1.1vw, 2.25rem);
+    --step-1: clamp(1.1875rem, 1.1rem + 0.35vw, 1.375rem);
+    --step-0: clamp(1rem, 0.97rem + 0.15vw, 1.0625rem);
+    --step--1: 0.875rem;
+    --step-label: 0.75rem;
+
+    --s-1: 0.25rem;
+    --s-2: 0.5rem;
+    --s-3: 0.75rem;
+    --s-4: 1rem;
+    --s-5: 1.5rem;
+    --s-6: 2rem;
+    --s-7: 3rem;
+    --s-8: 4rem;
+    --s-9: 6rem;
+    --s-10: 8rem;
+    --section: clamp(4.5rem, 3rem + 6vw, 9rem);
+    --gutter: clamp(1.25rem, 4vw, 3rem);
+    --container: 76rem;
+    --measure: 65ch;
+    --header-h: 4rem;
+
+    --r-sm: 0.625rem;
+    --r-md: 1rem;
+    --r-lg: 1.5rem;
+    --r-pill: 999px;
+
+    --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+    --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
+    --dur-fast: 160ms;
+    --dur-base: 240ms;
+    --dur-reveal: 700ms;
+    --rise: 12px;
+  }
+
+  :root[data-theme='light'] {
+    color-scheme: light;
+  }
+  :root[data-theme='dark'] {
+    color-scheme: dark;
+  }
+
+  .on-brand {
+    color-scheme: light;
+    --ink: var(--on-brand);
+    --ink-2: var(--on-brand);
+    --link: var(--on-brand);
+    --focus: var(--on-brand);
+    --mark-heavy: var(--on-brand);
+    --mark-light: var(--on-brand);
+    --line: rgb(255 255 255 / 0.22);
+  }
+
+  .on-app {
+    color-scheme: dark;
+    --ink: var(--app-text);
+    --ink-2: var(--app-text-2);
+    --line: var(--app-border);
+    --link: var(--app-accent);
+    --focus: var(--app-accent);
+    --mark-heavy: var(--app-text);
+    --mark-light: var(--app-text-2);
+  }
+}

@@ -1,0 +1,130 @@
+---
+import { getCollection } from 'astro:content';
+import BrandMark from './BrandMark.astro';
+import { SITE } from '../lib/site';
+
+const apps = (await getCollection('apps')).sort((a, b) => a.data.order - b.data.order);
+const year = new Date().getUTCFullYear();
+---
+
+<footer class="site-footer">
+  <div class="container site-footer__grid">
+    <div class="site-footer__brand">
+      <a href="/" class="site-footer__home" aria-label="Loka Labs home"><BrandMark size="footer" /></a>
+      <p class="site-footer__note">
+        Local-first apps from another loka. This site uses no analytics, no cookies and no third-party
+        requests. Fonts are self-hosted.
+      </p>
+    </div>
+
+    <nav class="site-footer__cols" aria-label="Footer">
+      <div>
+        <h2 class="label">Apps</h2>
+        <ul role="list">
+          {
+            apps.map((app) => (
+              <li>
+                <a href={`/apps/${app.id}/`} translate="no">
+                  {app.data.name}
+                </a>
+              </li>
+            ))
+          }
+          <li><a href="/apps/">All apps</a></li>
+        </ul>
+      </div>
+      <div>
+        <h2 class="label">Legal</h2>
+        <ul role="list">
+          <li><a href="/legal/">All documents</a></li>
+          {
+            apps.map((app) => (
+              <li>
+                <a href={`/apps/${app.id}/privacy/`}>
+                  <span translate="no">{app.data.name}</span>{' '}privacy
+                </a>
+              </li>
+            ))
+          }
+          <li><a href="/legal/#this-website">Website privacy</a></li>
+        </ul>
+      </div>
+      <div>
+        <h2 class="label">Studio</h2>
+        <ul role="list">
+          <li><a href="/support/">Support</a></li>
+          <li><a href={`mailto:${SITE.email}`}>Email us</a></li>
+        </ul>
+      </div>
+    </nav>
+
+    <p class="site-footer__legal">
+      <span>© {year} <span translate="no">Loka Labs</span></span>
+      <span>Made to be kept.</span>
+    </p>
+  </div>
+</footer>
+
+<style>
+  .site-footer {
+    border-top: 1px solid var(--line);
+    padding-block: var(--s-9) max(var(--s-7), env(safe-area-inset-bottom));
+    font-size: var(--step--1);
+    color: var(--ink-2);
+  }
+  .site-footer__grid {
+    display: grid;
+    gap: var(--s-8) var(--s-6);
+  }
+  .site-footer__home {
+    display: inline-block;
+    text-decoration: none;
+  }
+  .site-footer__note {
+    margin-top: var(--s-4);
+    max-width: 34ch;
+  }
+  .site-footer__cols {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(9rem, 1fr));
+    gap: var(--s-6);
+  }
+  .site-footer__cols h2 {
+    margin-bottom: var(--s-3);
+    font-family: var(--font-code);
+    font-weight: 500;
+    letter-spacing: 0.06em;
+  }
+  .site-footer__cols ul {
+    display: grid;
+    gap: var(--s-1);
+  }
+  .site-footer__cols a {
+    display: inline-block;
+    padding-block: 0.4rem;
+    color: var(--ink);
+    text-decoration: none;
+  }
+  .site-footer__cols a:hover {
+    text-decoration: underline;
+    text-decoration-color: var(--ink-3);
+  }
+  .site-footer__legal {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: var(--s-2) var(--s-5);
+    padding-top: var(--s-5);
+    border-top: 1px solid var(--line);
+    color: var(--ink-2);
+  }
+
+  @media (min-width: 64rem) {
+    .site-footer__grid {
+      grid-template-columns: 5fr 7fr;
+    }
+    .site-footer__legal {
+      grid-column: 1 / -1;
+    }
+  }
+</style>

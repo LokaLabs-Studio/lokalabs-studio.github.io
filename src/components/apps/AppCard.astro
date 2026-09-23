@@ -1,0 +1,141 @@
+---
+import { Image } from 'astro:assets';
+import AppWordmark from './AppWordmark.astro';
+import Icon from '../Icon.astro';
+import { STATUS_LABEL, type App } from '../../lib/apps';
+
+interface Props {
+  app: App;
+  headingLevel?: 'h2' | 'h3';
+}
+const { app, headingLevel: H = 'h3' } = Astro.props;
+const href = `/apps/${app.id}/`;
+---
+
+<article class="app-card on-app" data-app-theme={app.id} data-vt-scope>
+  <div class="app-card__surface vt-surface" data-vt={`${app.id}-surface`}></div>
+  <div class="app-card__top">
+    <Image
+      src={app.data.icon}
+      alt=""
+      width={72}
+      height={72}
+      densities={[1, 2]}
+      class="app-card__icon vt-icon"
+      data-vt={`${app.id}-icon`}
+    />
+    <p class="app-card__status label">{STATUS_LABEL[app.data.status]}</p>
+  </div>
+
+  <H class="app-card__name">
+    <a href={href} class="app-card__link">
+      <AppWordmark app={app} class="vt-name" data-vt={`${app.id}-name`} />
+    </a>
+  </H>
+  <p class="app-card__tagline">{app.data.tagline}</p>
+
+  <ul class="app-card__facts" role="list">
+    {app.data.facts.map((f) => <li>{f}</li>)}
+  </ul>
+
+  <p class="app-card__more" aria-hidden="true">
+    <span>Explore <span translate="no">{app.data.name}</span></span>
+    <Icon name="arrow-right" size="1.125em" class="app-card__arrow" />
+  </p>
+</article>
+
+<style>
+  .app-card {
+    position: relative;
+    isolation: isolate;
+    display: grid;
+    align-content: start;
+    gap: var(--s-5);
+    padding: clamp(var(--s-5), 4vw, var(--s-7));
+    color: var(--app-text);
+    border-radius: var(--r-lg);
+  }
+  .app-card__surface {
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    background: var(--app-bg);
+    border: 1px solid var(--app-border);
+    border-radius: inherit;
+    transition: transform var(--dur-base) var(--ease-out);
+  }
+  .app-card:hover .app-card__surface {
+    transform: scale(1.008);
+  }
+
+  .app-card__top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--s-4);
+  }
+  .app-card__icon {
+    width: 4.5rem;
+    height: 4.5rem;
+    border-radius: 22%;
+    box-shadow: 0 0 0 1px var(--app-border);
+  }
+  .app-card__status {
+    color: var(--app-text-2);
+    text-align: right;
+  }
+
+  .app-card__name {
+    font-size: clamp(2.5rem, 1.6rem + 3.4vw, 4.25rem);
+    margin-top: var(--s-5);
+  }
+  .app-card__link {
+    color: inherit;
+    text-decoration: none;
+  }
+  .app-card__link::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: var(--r-lg);
+  }
+  .app-card__link:focus-visible {
+    outline: none;
+  }
+  .app-card__link:focus-visible::after {
+    outline: 2px solid var(--app-accent);
+    outline-offset: 4px;
+  }
+
+  .app-card__tagline {
+    font-size: var(--step-1);
+    color: var(--app-text);
+    max-width: 30ch;
+  }
+  .app-card__facts {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--s-2);
+  }
+  .app-card__facts li {
+    padding: var(--s-1) var(--s-3);
+    border: 1px solid var(--app-border);
+    border-radius: var(--r-pill);
+    font-size: var(--step--1);
+    color: var(--app-text-2);
+  }
+  .app-card__more {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--s-2);
+    margin-top: var(--s-4);
+    font-weight: 500;
+    color: var(--app-accent);
+  }
+  .app-card :global(.app-card__arrow) {
+    transition: transform var(--dur-base) var(--ease-out);
+  }
+  .app-card:hover :global(.app-card__arrow) {
+    transform: translateX(4px);
+  }
+</style>

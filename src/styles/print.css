@@ -1,0 +1,51 @@
+@media print {
+  @page {
+    margin: 18mm;
+  }
+  :root {
+    color-scheme: light;
+    --bg: #ffffff;
+    --bg-raised: #ffffff;
+    --bg-sunken: #f2f2f2;
+    --ink: #000000;
+    --ink-2: #333333;
+    --ink-3: #555555;
+    --line: #cccccc;
+    --line-strong: #999999;
+    --link: #000000;
+  }
+  html,
+  body {
+    background: #ffffff !important;
+    font-size: 10.5pt;
+  }
+  .site-header,
+  .site-footer,
+  .skip-link,
+  .theme-toggle,
+  .toc,
+  .anchor {
+    display: none !important;
+  }
+  [data-reveal],
+  [data-reveal] [data-stagger],
+  [data-reveal] .w {
+    opacity: 1 !important;
+    transform: none !important;
+  }
+  .prose a[href^='http']::after {
+    content: ' (' attr(href) ')';
+    font-size: 0.85em;
+    color: #555555;
+    overflow-wrap: anywhere;
+  }
+  .prose h2,
+  .prose h3 {
+    break-after: avoid;
+  }
+  .prose table,
+  .prose li,
+  .summary {
+    break-inside: avoid;
+  }
+}

@@ -1,0 +1,139 @@
+---
+interface Props {
+  caption?: string;
+}
+const { caption = 'How LiftLab is paid for' } = Astro.props;
+
+const rows = [
+  {
+    what: 'Using the app',
+    you: 'Nothing. Every training feature is free.',
+    us: 'Nothing.',
+  },
+  {
+    what: 'Watching an ad',
+    optional: true,
+    you: 'About 30 seconds, only when you tap “Watch an ad”. It unlocks bonus app icons for 2 minutes.',
+    us: 'A small payment from Google AdMob. The ad is non-personalised.',
+  },
+  {
+    what: 'Supporting us',
+    optional: true,
+    you: 'A one-time payment through Google Play, from $1.99 to $49.99. The icon vault stays open for good.',
+    us: 'Your support, minus Google Play’s fee.',
+  },
+];
+---
+
+<div class="ledger-wrap">
+  <table class="ledger">
+    <caption class="visually-hidden">{caption}</caption>
+    <thead>
+      <tr>
+        <th scope="col">What</th>
+        <th scope="col">What it costs you</th>
+        <th scope="col">What we get</th>
+      </tr>
+    </thead>
+    <tbody data-reveal>
+      {
+        rows.map((r) => (
+          <tr data-stagger>
+            <th scope="row">
+              {r.what}
+              {r.optional && <span class="ledger__opt">Optional</span>}
+            </th>
+            <td data-label="What it costs you">{r.you}</td>
+            <td data-label="What we get">{r.us}</td>
+          </tr>
+        ))
+      }
+    </tbody>
+  </table>
+</div>
+
+<style>
+  .ledger-wrap {
+    border-top: 2px solid var(--ink);
+  }
+  .ledger {
+    width: 100%;
+    text-align: left;
+  }
+  .ledger thead th {
+    padding: var(--s-3) var(--s-4) var(--s-3) 0;
+    font-family: var(--font-code);
+    font-size: var(--step-label);
+    font-weight: 500;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--ink-2);
+    border-bottom: 1px solid var(--line);
+  }
+  .ledger tbody th,
+  .ledger td {
+    padding: var(--s-5) var(--s-5) var(--s-5) 0;
+    border-bottom: 1px solid var(--line);
+    vertical-align: top;
+  }
+  .ledger tbody th {
+    font-family: var(--font-display);
+    font-size: var(--step-1);
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    width: 26%;
+  }
+  .ledger td {
+    color: var(--ink-2);
+  }
+  .ledger td:last-child {
+    color: var(--ink);
+  }
+  .ledger__opt {
+    display: block;
+    width: fit-content;
+    margin-top: var(--s-2);
+    padding: 0.125rem var(--s-2);
+    border: 1px solid var(--line-strong);
+    border-radius: var(--r-pill);
+    font-family: var(--font-code);
+    font-size: var(--step-label);
+    font-weight: 500;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: var(--ink-2);
+  }
+
+  @media (max-width: 47.99rem) {
+    .ledger thead {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      overflow: hidden;
+      clip-path: inset(50%);
+    }
+    .ledger tr {
+      display: grid;
+      gap: var(--s-3);
+      padding-block: var(--s-5);
+      border-bottom: 1px solid var(--line);
+    }
+    .ledger tbody th,
+    .ledger td {
+      display: block;
+      width: auto;
+      padding: 0;
+      border: 0;
+    }
+    .ledger td::before {
+      content: attr(data-label);
+      display: block;
+      margin-bottom: var(--s-1);
+      font-family: var(--font-code);
+      font-size: var(--step-label);
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--ink-2);
+    }
+  }
+</style>

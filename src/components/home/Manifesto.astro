@@ -1,0 +1,161 @@
+---
+import StaggerHeading from '../StaggerHeading.astro';
+---
+
+<section class="manifesto" aria-labelledby="manifesto-title">
+  <div class="container manifesto__grid">
+    <div class="entry" data-reveal>
+      <p class="entry__word" translate="no" data-stagger>loka</p>
+      <p class="entry__meta label" data-stagger>
+        <span lang="sa">लोक</span>
+        <span aria-hidden="true">·</span>
+        <span class="entry__ipa">/ˈloʊ.kə/</span>
+        <span aria-hidden="true">·</span>
+        <span>Sanskrit, noun</span>
+      </p>
+      <ol class="entry__senses" role="list" data-stagger>
+        <li><span class="entry__n">1</span><span>A world; a realm or plane of existence.</span></li>
+        <li><span class="entry__n">2</span><span><em>(to us)</em> What “local” sounds like, said quickly.</span></li>
+      </ol>
+    </div>
+
+    <div class="manifesto__copy">
+      <StaggerHeading id="manifesto-title" class="manifesto__title" text="Apps from another loka." />
+      <div class="manifesto__prose" data-reveal>
+        <p data-stagger>
+          Most apps live somewhere else: on a server, behind an account, inside a subscription that renews every
+          month. You never quite have them. You’re renting.
+        </p>
+        <p data-stagger>
+          Ours come from a different world, the one in your pocket. They run on your phone, work without a
+          connection and keep what they know about you right there on the device.
+        </p>
+        <blockquote class="manifesto__quote" data-stagger>
+          <p>
+            We rebuild the apps you’d normally rent. No subscriptions, no forced ads, no accounts. Everything
+            lives on your phone, works offline and is yours.
+          </p>
+        </blockquote>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .manifesto {
+    padding-block: var(--section);
+  }
+  .manifesto__grid {
+    display: grid;
+    gap: var(--s-8);
+  }
+
+  .entry {
+    align-self: start;
+    display: grid;
+    gap: var(--s-4);
+  }
+  .entry__word {
+    font-family: var(--font-display);
+    font-size: clamp(4.5rem, 2rem + 10vw, 10rem);
+    font-weight: 900;
+    line-height: 0.8;
+    letter-spacing: -0.055em;
+    padding-bottom: 0.08em;
+  }
+  .entry__meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--s-2);
+    padding-bottom: var(--s-4);
+    border-bottom: 1px solid var(--line);
+  }
+  .entry__ipa {
+    text-transform: none;
+    letter-spacing: 0.02em;
+  }
+  .entry__meta [lang='sa'] {
+    font-family: system-ui, sans-serif;
+    font-size: 1.2em;
+    letter-spacing: 0;
+    text-transform: none;
+  }
+  .entry__senses {
+    display: grid;
+    gap: var(--s-3);
+    font-size: var(--step-1);
+    line-height: 1.4;
+  }
+  .entry__senses li {
+    display: grid;
+    grid-template-columns: 1.75rem 1fr;
+  }
+  .entry__n {
+    font-family: var(--font-code);
+    font-size: var(--step--1);
+    color: var(--ink-2);
+    padding-top: 0.3em;
+  }
+  .entry__senses em {
+    font-style: italic;
+    color: var(--ink-2);
+  }
+
+  .manifesto__copy {
+    display: grid;
+    gap: var(--s-6);
+    align-content: start;
+  }
+  .manifesto__title {
+    font-size: var(--step-3);
+    line-height: 0.98;
+    letter-spacing: -0.04em;
+  }
+  .manifesto__prose {
+    display: grid;
+    gap: var(--s-5);
+    max-width: 36rem;
+    font-size: var(--step-1);
+    line-height: 1.55;
+    color: var(--ink-2);
+  }
+  .manifesto__quote {
+    position: relative;
+    margin-top: var(--s-3);
+    padding-left: calc(var(--s-5) + 0.75rem);
+    color: var(--ink);
+    font-family: var(--font-display);
+    font-size: var(--step-2);
+    font-weight: 600;
+    line-height: 1.2;
+    letter-spacing: -0.02em;
+  }
+
+  .manifesto__quote::before,
+  .manifesto__quote::after {
+    content: '';
+    position: absolute;
+    top: 0.15em;
+    bottom: 0.15em;
+    background: var(--brand);
+  }
+  .manifesto__quote::before {
+    left: 0;
+    width: 0.5rem;
+  }
+  .manifesto__quote::after {
+    left: 0.6875rem;
+    width: 0.125rem;
+  }
+
+  @media (min-width: 64rem) {
+    .manifesto__grid {
+      grid-template-columns: 5fr 7fr;
+      column-gap: var(--s-9);
+    }
+    .entry {
+      position: sticky;
+      top: calc(var(--header-h) + var(--s-7));
+    }
+  }
+</style>

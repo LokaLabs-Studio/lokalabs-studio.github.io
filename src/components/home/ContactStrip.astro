@@ -1,0 +1,77 @@
+---
+import { EMAIL_PARTS, SITE } from '../../lib/site';
+import Icon from '../Icon.astro';
+---
+
+<section class="contact" aria-labelledby="contact-title">
+  <div class="container contact__inner" data-reveal>
+    <h2 id="contact-title" class="contact__title">Questions, bugs or ideas? Talk to a person.</h2>
+    <a class="contact__email" href={`mailto:${SITE.email}`}>
+      <span>{EMAIL_PARTS[0]}<wbr />@{EMAIL_PARTS[1]}</span>
+      <Icon name="arrow-up-right" class="contact__arrow" size="0.7em" />
+    </a>
+    <p class="contact__more">
+      Or browse <a href="/support/">support and common questions</a>.
+    </p>
+  </div>
+</section>
+
+<style>
+  .contact {
+    padding-block: var(--section);
+  }
+  .contact__inner {
+    display: grid;
+    gap: var(--s-4);
+  }
+  .contact__title {
+    font-family: var(--font-sans);
+    font-size: var(--step-1);
+    font-weight: 500;
+    letter-spacing: 0;
+    color: var(--ink-2);
+  }
+  .contact__email {
+    display: inline-flex;
+    align-items: baseline;
+    gap: 0.2em;
+    width: fit-content;
+    max-width: 100%;
+    font-family: var(--font-display);
+    font-size: clamp(1.5rem, 0.6rem + 4.4vw, 5rem);
+    font-weight: 800;
+    letter-spacing: -0.045em;
+    line-height: 1.05;
+    color: var(--ink);
+    text-decoration: none;
+  }
+  .contact__email span {
+    position: relative;
+  }
+  .contact__email span::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: -0.02em;
+    height: 0.06em;
+    background: currentColor;
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform var(--dur-reveal) var(--ease-out);
+  }
+  .contact__email:hover span::after {
+    transform: scaleX(1);
+  }
+  .contact__email :global(.contact__arrow) {
+    align-self: center;
+    color: var(--link);
+    transition: transform var(--dur-base) var(--ease-out);
+  }
+  .contact__email:hover :global(.contact__arrow) {
+    transform: translate(3px, -3px);
+  }
+  .contact__more {
+    color: var(--ink-2);
+  }
+</style>

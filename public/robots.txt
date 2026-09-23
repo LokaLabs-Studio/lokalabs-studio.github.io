@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://lokalabs-studio.github.io/sitemap-index.xml

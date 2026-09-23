@@ -1,0 +1,46 @@
+---
+import ArrowLeft from '@phosphor-icons/core/assets/regular/arrow-left.svg';
+import ArrowRight from '@phosphor-icons/core/assets/regular/arrow-right.svg';
+import ArrowUpRight from '@phosphor-icons/core/assets/regular/arrow-up-right.svg';
+import CaretDown from '@phosphor-icons/core/assets/regular/caret-down.svg';
+import CircleHalf from '@phosphor-icons/core/assets/regular/circle-half.svg';
+import Envelope from '@phosphor-icons/core/assets/regular/envelope-simple.svg';
+import GooglePlay from '@phosphor-icons/core/assets/regular/google-play-logo.svg';
+import Moon from '@phosphor-icons/core/assets/regular/moon.svg';
+import Printer from '@phosphor-icons/core/assets/regular/printer.svg';
+import Sun from '@phosphor-icons/core/assets/regular/sun.svg';
+
+const icons = {
+  'arrow-left': ArrowLeft,
+  'arrow-right': ArrowRight,
+  'arrow-up-right': ArrowUpRight,
+  'caret-down': CaretDown,
+  'circle-half': CircleHalf,
+  envelope: Envelope,
+  'google-play': GooglePlay,
+  moon: Moon,
+  printer: Printer,
+  sun: Sun,
+} as const;
+
+export type IconName = keyof typeof icons;
+
+interface Props {
+  name: IconName;
+  size?: number | string;
+  class?: string;
+}
+
+const { name, size = '1.25em', class: className } = Astro.props;
+const Svg = icons[name];
+---
+
+<Svg width={size} height={size} class:list={['icon', className]} aria-hidden="true" focusable="false" />
+
+<style>
+  .icon {
+    display: inline-block;
+    flex: none;
+    vertical-align: -0.2em;
+  }
+</style>

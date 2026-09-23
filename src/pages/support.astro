@@ -1,0 +1,202 @@
+---
+import { getCollection, render } from 'astro:content';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Icon from '../components/Icon.astro';
+import { EMAIL_PARTS, SITE } from '../lib/site';
+
+const groups = [
+  { id: 'studio', title: 'About Loka Labs' },
+  { id: 'liftlab', title: 'LiftLab' },
+] as const;
+
+const faqs = await getCollection('faq');
+const byGroup = await Promise.all(
+  groups.map(async (g) => ({
+    ...g,
+    items: await Promise.all(
+      faqs
+        .filter((f) => f.data.group === g.id)
+        .sort((a, b) => a.data.order - b.data.order)
+        .map(async (f) => ({ id: f.id.replace('/', '-'), question: f.data.question, ...(await render(f)) })),
+    ),
+  })),
+);
+
+const bugSubject = 'Bug report';
+const bugBody = [
+  'Which app:',
+  'What happened:',
+  'What you expected:',
+  'Phone model and Android version:',
+  '',
+].join('\n');
+const bugHref = `mailto:${SITE.email}?subject=${encodeURIComponent(bugSubject)}&body=${encodeURIComponent(bugBody)}`;
+---
+
+<BaseLayout title="Support" description="Get help with Loka Labs apps. Common questions, and a real person at the other end of the email." page="support">
+  <div class="container support">
+    <header class="support__head">
+      <p class="label">Support</p>
+      <h1 class="support__title">Talk to a person.</h1>
+      <p class="lead">
+        No ticket system and no chatbot. Email us and someone who works on the apps will reply.
+      </p>
+      <a class="support__email" href={`mailto:${SITE.email}`}>
+        <Icon name="envelope" size="0.8em" />
+        <span>{EMAIL_PARTS[0]}<wbr />@{EMAIL_PARTS[1]}</span>
+      </a>
+      <p class="support__bug">
+        Found something broken? <a href={bugHref}>Report a bug</a> with a ready-made template.
+      </p>
+    </header>
+
+    <div class="faq">
+      {
+        byGroup.map((g) => (
+          <section class="faq__group" aria-labelledby={`faq-${g.id}`}>
+            <h2 id={`faq-${g.id}`} class="faq__title" translate={g.id === 'liftlab' ? 'no' : undefined}>
+              {g.title}
+            </h2>
+            <div class="faq__list">
+              {g.items.map(({ id, question, Content }) => (
+                <details class="faq__item" id={id} name="faq">
+                  <summary>
+                    <span>{question}</span>
+                    <Icon name="caret-down" class="faq__caret" size="1.125rem" />
+                  </summary>
+                  <div class="faq__answer prose">
+                    <Content />
+                  </div>
+                </details>
+              ))}
+            </div>
+          </section>
+        ))
+      }
+    </div>
+  </div>
+</BaseLayout>
+
+<script>
+  const open = () => {
+    const id = decodeURIComponent(location.hash.slice(1));
+    const el = id ? document.getElementById(id) : null;
+    if (el instanceof HTMLDetailsElement) el.open = true;
+  };
+  open();
+  addEventListener('hashchange', open);
+</script>
+
+<style>
+  .support {
+    display: grid;
+    gap: var(--s-9);
+    padding-block: var(--s-8) var(--section);
+  }
+  .support__head {
+    display: grid;
+    justify-items: start;
+    gap: var(--s-4);
+  }
+  .support__title {
+    font-size: var(--step-hero);
+    line-height: 0.93;
+    letter-spacing: -0.045em;
+  }
+  .support__email {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3em;
+    max-width: 100%;
+    margin-top: var(--s-4);
+    font-family: var(--font-display);
+    font-size: clamp(1.25rem, 0.5rem + 1.8vw, 2rem);
+    font-weight: 700;
+    letter-spacing: -0.035em;
+    color: var(--ink);
+    text-decoration: none;
+  }
+  .support__email span {
+    text-decoration: underline;
+    text-decoration-thickness: 0.06em;
+    text-underline-offset: 0.16em;
+    text-decoration-color: var(--line-strong);
+    transition: text-decoration-color var(--dur-fast) ease;
+  }
+  .support__email:hover span {
+    text-decoration-color: currentColor;
+  }
+  .support__bug {
+    color: var(--ink-2);
+  }
+
+  .faq {
+    display: grid;
+    gap: var(--s-8);
+  }
+  .faq__group {
+    display: grid;
+    gap: var(--s-5);
+  }
+  .faq__title {
+    font-size: var(--step-2);
+    letter-spacing: -0.03em;
+  }
+  .faq__list {
+    border-top: 1px solid var(--line);
+  }
+  .faq__item {
+    border-bottom: 1px solid var(--line);
+  }
+  .faq__item summary {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--s-4);
+    min-height: 3.5rem;
+    padding-block: var(--s-4);
+    font-size: var(--step-1);
+    font-weight: 500;
+    line-height: 1.35;
+    cursor: pointer;
+    list-style: none;
+  }
+  .faq__item summary::-webkit-details-marker {
+    display: none;
+  }
+  .faq__item summary:hover span {
+    text-decoration: underline;
+    text-decoration-thickness: 1px;
+    text-underline-offset: 0.2em;
+    text-decoration-color: var(--ink-3);
+  }
+  .faq__item :global(.faq__caret) {
+    color: var(--ink-2);
+    transition: transform var(--dur-base) var(--ease-out);
+  }
+  .faq__item[open] :global(.faq__caret) {
+    transform: rotate(180deg);
+  }
+  .faq__answer {
+    padding-bottom: var(--s-5);
+    color: var(--ink-2);
+  }
+  .faq__answer :global(p) {
+    color: var(--ink-2);
+  }
+
+  @media (min-width: 64rem) {
+    .support {
+      grid-template-columns: 5fr 7fr;
+      column-gap: var(--s-9);
+      align-items: start;
+    }
+    .support__head {
+      position: sticky;
+      top: calc(var(--header-h) + var(--s-7));
+    }
+    .support__title {
+      font-size: clamp(3rem, 1rem + 4vw, 5.5rem);
+    }
+  }
+</style>

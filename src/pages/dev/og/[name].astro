@@ -1,0 +1,133 @@
+---
+import { Font } from 'astro:assets';
+import BrandMark from '../../../components/BrandMark.astro';
+import AppWordmark from '../../../components/apps/AppWordmark.astro';
+import { getApps } from '../../../lib/apps';
+import '../../../styles/global.css';
+
+export async function getStaticPaths() {
+  if (!import.meta.env.DEV) return [];
+  const apps = await getApps();
+  return [
+    { params: { name: 'home' }, props: { app: undefined } },
+    ...apps.map((app) => ({ params: { name: app.id }, props: { app } })),
+  ];
+}
+
+const { app } = Astro.props;
+---
+
+<!doctype html>
+<html lang="en" data-theme="light">
+  <head>
+    <meta charset="utf-8" />
+    <title>OG card</title>
+    <link rel="stylesheet" href="/app-themes.css" />
+    <Font cssVariable="--font-mona" preload />
+    <Font cssVariable="--font-body" preload />
+    <Font cssVariable="--font-mono" />
+  </head>
+  <body>
+    {
+      app ? (
+        <main class="card card--app on-app" data-app-theme={app.id}>
+          <AppWordmark app={app} class="card__app-mark" />
+          <p class="card__tagline">{app.data.tagline}</p>
+          <p class="card__foot">
+            <span class="card__by">
+              by <BrandMark size="nav" />
+            </span>
+            <span>No account · No subscription · Works offline</span>
+          </p>
+        </main>
+      ) : (
+        <main class="card card--home on-brand">
+          <BrandMark size="nav" class="card__mark" />
+          <p class="card__title">Software you get to keep.</p>
+          <p class="card__sub">Local-first apps. No subscriptions, no accounts.</p>
+          <svg class="card__bars" viewBox="0 0 47 120" aria-hidden="true">
+            <rect width="30" height="120" />
+            <rect x="40" width="7" height="120" />
+          </svg>
+        </main>
+      )
+    }
+  </body>
+</html>
+
+<style>
+  body {
+    margin: 0;
+    min-height: 0;
+  }
+  .card {
+    position: relative;
+    box-sizing: border-box;
+    width: 1200px;
+    height: 630px;
+    padding: 72px 80px;
+    overflow: hidden;
+    display: grid;
+    align-content: space-between;
+  }
+  .card--home {
+    background: var(--brand);
+    color: var(--on-brand);
+  }
+  .card__mark {
+    font-size: 2.25rem;
+  }
+  .card__title {
+    font-family: var(--font-display);
+    font-weight: 800;
+    font-size: 108px;
+    line-height: 0.92;
+    letter-spacing: -0.045em;
+    max-width: 12ch;
+    align-self: end;
+  }
+  .card__sub {
+    font-size: 30px;
+    margin-top: -40px;
+  }
+  .card__bars {
+    position: absolute;
+    right: 80px;
+    bottom: 0;
+    height: 470px;
+    fill: var(--on-brand);
+  }
+
+  .card--app {
+    background: var(--app-bg);
+    color: var(--app-text);
+    align-content: center;
+    gap: 40px;
+  }
+  .card__app-mark {
+    font-size: 150px;
+  }
+  .card__tagline {
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: 52px;
+    letter-spacing: -0.02em;
+  }
+  .card__foot {
+    position: absolute;
+    left: 80px;
+    right: 80px;
+    bottom: 56px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-family: var(--font-code);
+    font-size: 20px;
+    color: var(--app-text-2);
+  }
+  .card__by {
+    display: inline-flex;
+    align-items: baseline;
+    gap: 12px;
+  }
+</style>

@@ -1,0 +1,76 @@
+---
+import Icon from '../Icon.astro';
+import { DOC_BLURB, DOC_LABEL, docHref, type App } from '../../lib/apps';
+import type { DocKind } from '../../content.config';
+
+interface Props {
+  app: App;
+  current?: DocKind;
+  compact?: boolean;
+}
+const { app, current, compact = false } = Astro.props;
+---
+
+<ul class:list={['docs', { 'docs--compact': compact }]} role="list">
+  {
+    app.data.docs.map((kind) => (
+      <li>
+        <a href={docHref(app.id, kind)} class="docs__link" aria-current={kind === current ? 'page' : undefined}>
+          <span class="docs__text">
+            <span class="docs__title">{DOC_LABEL[kind]}</span>
+            {!compact && <span class="docs__blurb">{DOC_BLURB[kind]}</span>}
+          </span>
+          <Icon name="arrow-right" class="docs__arrow" size="1.125rem" />
+        </a>
+      </li>
+    ))
+  }
+</ul>
+
+<style>
+  .docs {
+    border-top: 1px solid var(--line);
+  }
+  .docs__link {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--s-4);
+    padding: var(--s-4) 0;
+    border-bottom: 1px solid var(--line);
+    color: var(--ink);
+    text-decoration: none;
+  }
+  .docs__text {
+    display: grid;
+    gap: 0.125rem;
+  }
+  .docs__title {
+    font-weight: 600;
+  }
+  .docs__blurb {
+    font-size: var(--step--1);
+    color: var(--ink-2);
+  }
+  .docs__link :global(.docs__arrow) {
+    color: var(--ink-2);
+    transition: transform var(--dur-base) var(--ease-out);
+  }
+  .docs__link:hover :global(.docs__arrow) {
+    transform: translateX(4px);
+    color: var(--ink);
+  }
+  .docs__link:hover .docs__title {
+    text-decoration: underline;
+    text-decoration-thickness: 1px;
+    text-underline-offset: 0.2em;
+  }
+  .docs__link[aria-current='page'] .docs__title::after {
+    content: ' (you’re here)';
+    font-weight: 400;
+    color: var(--ink-2);
+  }
+  .docs--compact .docs__link {
+    padding-block: var(--s-3);
+  }
+</style>

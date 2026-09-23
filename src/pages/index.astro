@@ -1,0 +1,23 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Hero from '../components/home/Hero.astro';
+import Manifesto from '../components/home/Manifesto.astro';
+import Principles from '../components/home/Principles.astro';
+import AppsShowcase from '../components/home/AppsShowcase.astro';
+import LightsOn from '../components/home/LightsOn.astro';
+import ContactStrip from '../components/home/ContactStrip.astro';
+import { THEME_COLOR } from '../lib/site';
+---
+
+<BaseLayout page="home" headerOver="brand" themeColor={THEME_COLOR.brand}>
+  <Hero
+    title="Software you get to keep."
+    sub="Local-first apps that live on your phone, work offline and stay yours. No subscriptions, no accounts."
+    cta={{ href: '/apps/liftlab/', label: 'Meet LiftLab' }}
+  />
+  <Manifesto />
+  <Principles />
+  <AppsShowcase />
+  <LightsOn />
+  <ContactStrip />
+</BaseLayout>

@@ -1,0 +1,67 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import ButtonLink from '../components/ButtonLink.astro';
+import { THEME_COLOR } from '../lib/site';
+---
+
+<BaseLayout title="Page not found" page="not-found" headerOver="brand" themeColor={THEME_COLOR.brand} noindex>
+  <section class="lost on-brand" aria-labelledby="lost-title">
+    <div class="container lost__inner">
+      <p class="lost__code label">404</p>
+      <h1 id="lost-title" class="lost__title">This page is in another loka.</h1>
+      <p class="lost__sub">The link may be old or mistyped. Everything that exists is one step away.</p>
+      <div class="lost__actions">
+        <ButtonLink href="/" variant="on-brand">Go home</ButtonLink>
+        <a href="/support/" class="lost__link">Get help</a>
+      </div>
+    </div>
+    <div data-header-sentinel class="lost__sentinel"></div>
+  </section>
+</BaseLayout>
+
+<style>
+  .lost {
+    position: relative;
+    display: grid;
+    align-items: center;
+    min-height: 100svh;
+    background: var(--brand);
+    color: var(--on-brand);
+  }
+  .lost__inner {
+    display: grid;
+    justify-items: start;
+    gap: var(--s-5);
+    padding-block: calc(var(--header-h) + var(--s-8)) var(--s-9);
+  }
+  .lost__code {
+    color: var(--on-brand);
+  }
+  .lost__title {
+    font-size: clamp(2.75rem, 1.4rem + 5.4vw, 6rem);
+    line-height: 0.95;
+    letter-spacing: -0.045em;
+    max-width: 12ch;
+  }
+  .lost__sub {
+    font-size: var(--step-1);
+    max-width: 34ch;
+  }
+  .lost__actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--s-5);
+    margin-top: var(--s-3);
+  }
+  .lost__link {
+    color: var(--on-brand);
+    font-weight: 500;
+  }
+  .lost__sentinel {
+    position: absolute;
+    bottom: 0;
+    width: 1px;
+    height: 1px;
+  }
+</style>

@@ -1,0 +1,73 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import AppCard from '../../components/apps/AppCard.astro';
+import { getApps } from '../../lib/apps';
+
+const apps = await getApps();
+---
+
+<BaseLayout
+  title="Apps"
+  description="Apps from Loka Labs. Each one replaces something you would usually rent, and keeps your data on your phone."
+  page="apps"
+>
+  <div class="container apps">
+    <header class="apps__head">
+      <p class="label">Apps</p>
+      <h1 class="apps__title">Made here, kept by you.</h1>
+      <p class="lead">
+        Each app replaces something you’d usually pay for every month. No subscriptions, no accounts, and your data
+        stays on your phone.
+      </p>
+    </header>
+
+    <ul class="apps__grid" role="list" data-reveal>
+      {
+        apps.map((app) => (
+          <li data-stagger>
+            <AppCard app={app} headingLevel="h2" />
+          </li>
+        ))
+      }
+    </ul>
+
+    <p class="apps__next">
+      More apps are in the lab. When one is ready to keep, it will show up here first.
+    </p>
+  </div>
+</BaseLayout>
+
+<style>
+  .apps {
+    display: grid;
+    gap: var(--s-8);
+    padding-block: var(--s-8) var(--section);
+  }
+  .apps__head {
+    display: grid;
+    gap: var(--s-4);
+    max-width: 44rem;
+  }
+  .apps__title {
+    font-size: clamp(2.75rem, 1.5rem + 4.6vw, 5.5rem);
+    line-height: 0.95;
+    letter-spacing: -0.045em;
+  }
+  .apps__grid {
+    display: grid;
+    gap: var(--s-4);
+  }
+  .apps__grid li {
+    display: grid;
+  }
+  .apps__next {
+    color: var(--ink-2);
+    padding-top: var(--s-5);
+    border-top: 1px dashed var(--line-strong);
+  }
+  @media (min-width: 64rem) {
+    .apps__grid {
+      grid-template-columns: repeat(auto-fill, minmax(34rem, 1fr));
+    }
+  }
+</style>

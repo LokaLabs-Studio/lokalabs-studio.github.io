@@ -1,0 +1,47 @@
+---
+import type { HTMLAttributes } from 'astro/types';
+import { lockupSvg, type App } from '../../lib/apps';
+
+interface Props extends HTMLAttributes<'span'> {
+  app: App;
+}
+const { app, class: className, ...rest } = Astro.props;
+const { heavy, light } = app.data.wordmark;
+---
+
+<span class:list={['app-mark', className]} translate="no" {...rest}
+  ><span class="app-mark__glyph" set:html={lockupSvg(app.id)} /><span class="app-mark__word" aria-hidden="true"
+    ><span class="app-mark__heavy">{heavy}</span><span class="app-mark__light">{light}</span></span
+  ><span class="visually-hidden">{app.data.name}</span></span
+>
+
+<style>
+  .app-mark {
+    display: inline-flex;
+    align-items: center;
+    gap: calc(1em * 10 / 44);
+    font-family: var(--font-display);
+    line-height: 1;
+    white-space: nowrap;
+  }
+  .app-mark__glyph {
+    display: inline-flex;
+    color: var(--app-accent);
+  }
+  .app-mark__glyph :global(svg) {
+    height: 1em;
+    width: auto;
+  }
+  .app-mark__word {
+    color: var(--app-text);
+  }
+  .app-mark__heavy {
+    font-weight: 900;
+    letter-spacing: -0.0386em;
+  }
+  .app-mark__light {
+    font-weight: 200;
+    letter-spacing: -0.0205em;
+    color: var(--app-text-2);
+  }
+</style>

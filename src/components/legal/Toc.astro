@@ -1,0 +1,106 @@
+---
+import type { MarkdownHeading } from 'astro';
+import Icon from '../Icon.astro';
+
+interface Props {
+  headings: MarkdownHeading[];
+}
+const items = Astro.props.headings.filter((h) => h.depth === 2);
+---
+
+<details class="toc toc--compact">
+  <summary>
+    <span>On this page</span>
+    <Icon name="caret-down" class="toc__caret" size="1rem" />
+  </summary>
+  <ol role="list">
+    {items.map((h) => <li><a href={`#${h.slug}`}>{h.text}</a></li>)}
+  </ol>
+</details>
+
+<nav class="toc toc--rail" aria-label="On this page" data-toc>
+  <p class="label">On this page</p>
+  <ol role="list">
+    {items.map((h) => <li><a href={`#${h.slug}`}>{h.text}</a></li>)}
+  </ol>
+</nav>
+
+<script>
+  import { initTocSpy } from '../../scripts/toc-spy';
+  initTocSpy();
+</script>
+
+<style>
+  .toc ol {
+    display: grid;
+    gap: 0.125rem;
+  }
+  .toc a {
+    display: block;
+    padding: 0.375rem 0 0.375rem var(--s-4);
+    border-left: 1px solid var(--line);
+    font-size: var(--step--1);
+    line-height: 1.4;
+    color: var(--ink-2);
+    text-decoration: none;
+    transition: color var(--dur-fast) ease;
+  }
+  .toc a:hover {
+    color: var(--ink);
+  }
+  .toc a[aria-current='true'] {
+    color: var(--ink);
+    border-left: 2px solid var(--brand);
+    padding-left: calc(var(--s-4) - 1px);
+    font-weight: 500;
+  }
+
+  .toc--compact {
+    border: 1px solid var(--line);
+    border-radius: var(--r-md);
+    background: var(--bg-raised);
+  }
+  .toc--compact summary {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    min-height: 3rem;
+    padding: 0 var(--s-4);
+    font-weight: 500;
+    cursor: pointer;
+    list-style: none;
+  }
+  .toc--compact summary::-webkit-details-marker {
+    display: none;
+  }
+  .toc--compact :global(.toc__caret) {
+    transition: transform var(--dur-base) var(--ease-out);
+  }
+  .toc--compact[open] :global(.toc__caret) {
+    transform: rotate(180deg);
+  }
+  .toc--compact ol {
+    padding: 0 var(--s-4) var(--s-4);
+  }
+
+  .toc--rail {
+    display: none;
+  }
+  .toc--rail .label {
+    margin-bottom: var(--s-3);
+  }
+
+  @media (min-width: 64rem) {
+    .toc--compact {
+      display: none;
+    }
+    .toc--rail {
+      display: block;
+      position: sticky;
+      top: calc(var(--header-h) + var(--s-6));
+      max-height: calc(100dvh - var(--header-h) - var(--s-8));
+      overflow-y: auto;
+      overscroll-behavior: contain;
+    }
+  }
+</style>

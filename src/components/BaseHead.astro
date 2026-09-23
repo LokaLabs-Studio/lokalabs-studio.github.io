@@ -1,0 +1,73 @@
+---
+import { Font } from 'astro:assets';
+import { SITE, THEME_COLOR } from '../lib/site';
+import '../styles/global.css';
+
+export interface HeadProps {
+  title?: string;
+  description?: string;
+  themeColor?: string;
+  ogImage?: string;
+  noindex?: boolean;
+}
+
+const { title, description = SITE.description, themeColor, ogImage = '/og/home.png', noindex = false } = Astro.props as HeadProps;
+
+const fullTitle = title ? `${title} · ${SITE.name}` : `${SITE.name} · Apps that live on your phone`;
+const canonical = new URL(Astro.url.pathname, Astro.site);
+const ogUrl = new URL(ogImage, Astro.site);
+---
+
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<title>{fullTitle}</title>
+<meta name="description" content={description} />
+<link rel="canonical" href={canonical} />
+{noindex && <meta name="robots" content="noindex" />}
+
+<script is:inline>
+  (function () {
+    var d = document.documentElement;
+    var t = null;
+    try { t = localStorage.getItem('loka-theme'); } catch (e) {}
+    if (t === 'light' || t === 'dark') d.setAttribute('data-theme', t);
+    if (matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    d.classList.add('reveal');
+    setTimeout(function () { if (!d.classList.contains('reveal-ready')) d.classList.remove('reveal'); }, 3000);
+    if (d.getAttribute('data-page') === 'home') {
+      var seen = '1';
+      try { seen = sessionStorage.getItem('loka-intro'); sessionStorage.setItem('loka-intro', '1'); } catch (e) { seen = '1'; }
+      if (!seen) d.classList.add('intro');
+    }
+  })();
+</script>
+
+<Font cssVariable="--font-mona" preload />
+<Font cssVariable="--font-body" preload />
+<Font cssVariable="--font-mono" />
+
+{
+  themeColor ? (
+    <meta name="theme-color" content={themeColor} />
+  ) : (
+    <>
+      <meta name="theme-color" content={THEME_COLOR.paper} media="(prefers-color-scheme: light)" data-scheme="light" />
+      <meta name="theme-color" content={THEME_COLOR.ink} media="(prefers-color-scheme: dark)" data-scheme="dark" />
+    </>
+  )
+}
+
+<link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+<link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+<link rel="sitemap" href="/sitemap-index.xml" />
+<link rel="stylesheet" href="/app-themes.css" />
+
+<meta property="og:type" content="website" />
+<meta property="og:site_name" content={SITE.name} />
+<meta property="og:title" content={title ?? SITE.name} />
+<meta property="og:description" content={description} />
+<meta property="og:url" content={canonical} />
+<meta property="og:image" content={ogUrl} />
+<meta property="og:image:width" content="1200" />
+<meta property="og:image:height" content="630" />
+<meta name="twitter:card" content="summary_large_image" />

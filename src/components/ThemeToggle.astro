@@ -1,0 +1,47 @@
+---
+import Icon from './Icon.astro';
+---
+
+<button class="theme-toggle" type="button" data-theme-toggle aria-label="Theme: match system. Switch to light.">
+  <Icon name="circle-half" class="theme-toggle__icon theme-toggle__icon--system" size="1.25rem" />
+  <Icon name="sun" class="theme-toggle__icon theme-toggle__icon--light" size="1.25rem" />
+  <Icon name="moon" class="theme-toggle__icon theme-toggle__icon--dark" size="1.25rem" />
+</button>
+
+<style>
+  .theme-toggle {
+    display: inline-grid;
+    place-items: center;
+    width: 2.75rem;
+    height: 2.75rem;
+    border-radius: var(--r-pill);
+    color: var(--ink);
+    transition: background-color var(--dur-fast) ease;
+  }
+  .theme-toggle:hover {
+    background: color-mix(in srgb, currentColor 10%, transparent);
+  }
+  .theme-toggle:active :global(.icon) {
+    transform: scale(0.9);
+  }
+  .theme-toggle > :global(*) {
+    grid-area: 1 / 1;
+    transition: transform var(--dur-fast) var(--ease-out);
+  }
+  :global(.theme-toggle__icon--light),
+  :global(.theme-toggle__icon--dark) {
+    display: none;
+  }
+  :global(:root[data-theme='light']) :global(.theme-toggle__icon--light),
+  :global(:root[data-theme='dark']) :global(.theme-toggle__icon--dark) {
+    display: inline-block;
+  }
+  :global(:root[data-theme]) :global(.theme-toggle__icon--system) {
+    display: none;
+  }
+</style>
+
+<script>
+  import { initThemeToggle } from '../scripts/theme';
+  initThemeToggle();
+</script>

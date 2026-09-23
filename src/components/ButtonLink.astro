@@ -1,0 +1,84 @@
+---
+import type { HTMLAttributes } from 'astro/types';
+import Icon, { type IconName } from './Icon.astro';
+
+interface Props extends HTMLAttributes<'a'> {
+  href: string;
+  variant?: 'on-brand' | 'ink' | 'quiet';
+  icon?: IconName | null;
+}
+
+const { href, variant = 'ink', icon = 'arrow-right', class: className, ...rest } = Astro.props;
+---
+
+<a href={href} class:list={['btn', `btn--${variant}`, className]} {...rest}>
+  <span class="btn__label"><slot /></span>
+  {icon && <Icon name={icon} class="btn__icon" size="1.125em" />}
+</a>
+
+<style>
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--s-2);
+    min-height: 3rem;
+    padding: 0 var(--s-5);
+    border-radius: var(--r-pill);
+    font-family: var(--font-sans);
+    font-size: var(--step-0);
+    font-weight: 500;
+    line-height: 1;
+    white-space: nowrap;
+    text-decoration: none;
+    transition:
+      transform var(--dur-fast) var(--ease-out),
+      background-color var(--dur-fast) ease,
+      color var(--dur-fast) ease;
+  }
+  .btn:active {
+    transform: scale(0.98);
+  }
+  .btn :global(.btn__icon) {
+    transition: transform var(--dur-base) var(--ease-out);
+  }
+  .btn:hover :global(.btn__icon) {
+    transform: translateX(3px);
+  }
+
+  .btn--on-brand {
+    background: var(--on-brand);
+    color: var(--brand);
+  }
+  .btn--on-brand:hover {
+    background: #eef3ff;
+  }
+  .btn--on-brand:focus-visible {
+    outline-color: var(--on-brand);
+    outline-offset: 4px;
+  }
+
+  .btn--ink {
+    background: var(--ink);
+    color: var(--bg);
+  }
+  .btn--ink:hover {
+    background: color-mix(in srgb, var(--ink) 86%, var(--bg));
+  }
+
+  .btn--quiet {
+    min-height: 2.75rem;
+    padding: 0;
+    border-radius: 0;
+    color: var(--ink);
+  }
+  .btn--quiet .btn__label {
+    text-decoration: underline;
+    text-decoration-thickness: 1px;
+    text-underline-offset: 0.25em;
+    text-decoration-color: color-mix(in srgb, currentColor 35%, transparent);
+    transition: text-decoration-color var(--dur-fast) ease;
+  }
+  .btn--quiet:hover .btn__label {
+    text-decoration-color: currentColor;
+  }
+</style>

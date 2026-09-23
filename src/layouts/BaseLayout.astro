@@ -1,0 +1,58 @@
+---
+import BaseHead, { type HeadProps } from '../components/BaseHead.astro';
+import SiteHeader from '../components/SiteHeader.astro';
+import SiteFooter from '../components/SiteFooter.astro';
+
+interface Props extends HeadProps {
+  page?: string;
+  app?: string;
+  headerOver?: 'brand' | 'app' | 'none';
+  navCurrent?: string;
+}
+
+const { page, app, headerOver = 'none', navCurrent, ...head } = Astro.props;
+---
+
+<!doctype html>
+<html lang="en" data-page={page} data-app-theme={app}>
+  <head>
+    <BaseHead {...head} />
+  </head>
+  <body>
+    <a class="skip-link" href="#main">Skip to content</a>
+    <SiteHeader over={headerOver} current={navCurrent} />
+    <main id="main" tabindex="-1">
+      <slot />
+    </main>
+    <SiteFooter />
+    <script>
+      import { initReveal } from '../scripts/reveal';
+      import { initVtGuard } from '../scripts/vt-guard';
+      initReveal();
+      initVtGuard();
+    </script>
+  </body>
+</html>
+
+<style>
+  .skip-link {
+    position: fixed;
+    top: var(--s-3);
+    left: var(--s-3);
+    z-index: 100;
+    padding: var(--s-2) var(--s-4);
+    border-radius: var(--r-pill);
+    background: var(--ink);
+    color: var(--bg);
+    font-weight: 500;
+    text-decoration: none;
+    transform: translateY(-200%);
+    transition: transform var(--dur-base) var(--ease-out);
+  }
+  .skip-link:focus-visible {
+    transform: none;
+  }
+  main:focus {
+    outline: none;
+  }
+</style>

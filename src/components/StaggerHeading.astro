@@ -1,0 +1,22 @@
+---
+import type { HTMLAttributes, HTMLTag } from 'astro/types';
+
+interface Props extends HTMLAttributes<'h2'> {
+  as?: Extract<HTMLTag, 'h1' | 'h2' | 'h3'>;
+  text: string;
+}
+
+const { as: Tag = 'h2', text, ...rest } = Astro.props;
+const words = text.split(/\s+/).filter(Boolean);
+---
+
+<Tag {...rest} data-reveal>
+  {
+    words.map((word, i) => (
+      <>
+        <span class="w">{word}</span>
+        {i < words.length - 1 && ' '}
+      </>
+    ))
+  }
+</Tag>

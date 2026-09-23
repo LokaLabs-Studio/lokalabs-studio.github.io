@@ -1,0 +1,63 @@
+---
+import type { HTMLAttributes } from 'astro/types';
+
+interface Props extends HTMLAttributes<'span'> {
+  size?: 'nav' | 'footer' | 'display';
+}
+const { size = 'nav', class: className, ...rest } = Astro.props;
+---
+
+<span class:list={['mark', `mark--${size}`, className]} translate="no" {...rest}
+  ><svg class="mark__bars" viewBox="0 0 47 120" aria-hidden="true" focusable="false"
+    ><rect class="mark__bar mark__bar--a" width="30" height="120"></rect><rect
+      class="mark__bar mark__bar--b"
+      x="40"
+      width="7"
+      height="120"></rect></svg
+  ><span class="mark__heavy">loka</span><span class="mark__light">{' '}labs</span></span
+>
+
+<style>
+  .mark {
+    display: inline-block;
+    font-family: var(--font-display);
+    line-height: 1;
+    white-space: nowrap;
+    color: var(--mark-heavy);
+
+    padding-block-start: 0.1em;
+  }
+  .mark--nav {
+    font-size: 1.375rem;
+  }
+  .mark--footer {
+    font-size: 1.75rem;
+  }
+  .mark--display {
+    font-size: clamp(2.5rem, 1.5rem + 4vw, 4.5rem);
+  }
+
+  .mark__bars {
+    display: inline-block;
+    width: calc(1em * 47 / 120);
+    height: 1em;
+    margin-inline-end: calc(1em * 27 / 120);
+    vertical-align: baseline;
+    fill: currentColor;
+    overflow: visible;
+  }
+  .mark__bar {
+    transform-box: fill-box;
+    transform-origin: 50% 100%;
+  }
+
+  .mark__heavy {
+    font-weight: 900;
+    letter-spacing: -0.0386em;
+  }
+  .mark__light {
+    font-weight: 200;
+    letter-spacing: -0.0205em;
+    color: var(--mark-light);
+  }
+</style>

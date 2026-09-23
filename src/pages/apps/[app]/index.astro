@@ -1,0 +1,128 @@
+---
+import { render } from 'astro:content';
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import AppHeader from '../../../components/apps/AppHeader.astro';
+import DocList from '../../../components/apps/DocList.astro';
+import MoneyLedger from '../../../components/apps/MoneyLedger.astro';
+import { getApps, type App } from '../../../lib/apps';
+import { SITE } from '../../../lib/site';
+
+export async function getStaticPaths() {
+  const apps = await getApps();
+  return apps.map((app) => ({ params: { app: app.id }, props: { app } }));
+}
+
+const { app } = Astro.props as { app: App };
+const { Content } = await render(app);
+const { data } = app;
+---
+
+<BaseLayout
+  title={`${data.name}: ${data.tagline}`}
+  description={data.description}
+  page="app"
+  app={app.id}
+  headerOver="app"
+  themeColor={data.theme.bg}
+  ogImage={`/og/${app.id}.png`}
+>
+  <AppHeader app={app} />
+
+  <div class="container app-body">
+    <div class="app-body__main prose prose--lead" data-reveal>
+      <Content />
+    </div>
+
+    <aside class="app-body__side" aria-label={`${data.name} details`}>
+      <section aria-labelledby="docs-title" data-reveal>
+        <h2 id="docs-title" class="label">Documents</h2>
+        <DocList app={app} />
+      </section>
+      <section aria-labelledby="facts-title" data-reveal>
+        <h2 id="facts-title" class="label">At a glance</h2>
+        <ul class="facts" role="list">
+          {data.facts.map((f) => <li>{f}</li>)}
+          <li>No account, no subscription</li>
+        </ul>
+      </section>
+      <section aria-labelledby="help-title" data-reveal>
+        <h2 id="help-title" class="label">Help</h2>
+        <p>
+          Stuck or found a bug? <a href="/support/">Read the FAQ</a> or write to{' '}
+          <a href={`mailto:${SITE.email}`}>{SITE.email}</a>.
+        </p>
+      </section>
+    </aside>
+  </div>
+
+  <section class="app-money" aria-labelledby="money-title">
+    <div class="container app-money__inner">
+      <div class="app-money__head" data-reveal>
+        <h2 id="money-title">How <span translate="no">{data.name}</span> is paid for</h2>
+        <p>Every training feature is free. These are the only ways money changes hands, and both are optional.</p>
+      </div>
+      <MoneyLedger caption={`How ${data.name} is paid for`} />
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .app-body {
+    display: grid;
+    gap: var(--s-8);
+    padding-block: var(--section);
+  }
+  .app-body__side {
+    display: grid;
+    gap: var(--s-7);
+    align-content: start;
+  }
+  .app-body__side .label {
+    margin-bottom: var(--s-3);
+  }
+  .facts {
+    display: grid;
+    border-top: 1px solid var(--line);
+  }
+  .facts li {
+    padding-block: var(--s-3);
+    border-bottom: 1px solid var(--line);
+  }
+  .app-body__side p {
+    color: var(--ink-2);
+  }
+
+  .app-money {
+    padding-block: var(--section);
+    background: var(--bg-raised);
+    border-top: 1px solid var(--line);
+  }
+  .app-money__inner {
+    display: grid;
+    gap: var(--s-7);
+  }
+  .app-money__head {
+    display: grid;
+    gap: var(--s-3);
+    max-width: 40rem;
+  }
+  .app-money__head h2 {
+    font-size: var(--step-3);
+    letter-spacing: -0.04em;
+  }
+  .app-money__head p {
+    font-size: var(--step-1);
+    color: var(--ink-2);
+  }
+
+  @media (min-width: 64rem) {
+    .app-body {
+      grid-template-columns: minmax(0, 7fr) minmax(0, 4fr);
+      column-gap: var(--s-9);
+    }
+    .app-body__side {
+      position: sticky;
+      top: calc(var(--header-h) + var(--s-6));
+    }
+  }
+</style>

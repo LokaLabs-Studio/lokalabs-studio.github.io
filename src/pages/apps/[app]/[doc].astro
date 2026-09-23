@@ -1,0 +1,31 @@
+---
+import { getCollection, getEntry, render } from 'astro:content';
+import LegalLayout from '../../../layouts/LegalLayout.astro';
+import { getApps } from '../../../lib/apps';
+
+export async function getStaticPaths() {
+  const apps = await getApps();
+  const docs = await getCollection('legal', (d) => d.data.app !== undefined);
+
+  for (const app of apps) {
+    for (const kind of app.data.docs) {
+      if (!docs.some((d) => d.data.app!.id === app.id && d.data.kind === kind)) {
+        throw new Error(`[content] ${app.id} lists "${kind}" but src/content/legal/${app.id}/${kind}.md is missing`);
+      }
+    }
+  }
+
+  return docs.map((doc) => ({
+    params: { app: doc.data.app!.id, doc: doc.data.kind },
+    props: { doc },
+  }));
+}
+
+const { doc } = Astro.props;
+const app = (await getEntry(doc.data.app!))!;
+const { Content, headings } = await render(doc);
+---
+
+<LegalLayout doc={doc} app={app} headings={headings}>
+  <Content />
+</LegalLayout>

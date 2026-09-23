@@ -1,0 +1,146 @@
+---
+import { Image } from 'astro:assets';
+import AppWordmark from './AppWordmark.astro';
+import Icon from '../Icon.astro';
+import { STATUS_LABEL, type App } from '../../lib/apps';
+
+interface Props {
+  app: App;
+}
+const { app } = Astro.props;
+const { data } = app;
+---
+
+<section class="app-hero on-app" data-app-theme={app.id} aria-labelledby="app-title">
+  <div class="app-hero__surface" data-vt={`${app.id}-surface`}></div>
+  <div class="container app-hero__inner">
+    <nav class="app-hero__crumbs label" aria-label="Breadcrumb">
+      <a href="/apps/">Apps</a>
+      <span aria-hidden="true">/</span>
+      <span aria-current="page" translate="no">{data.name}</span>
+    </nav>
+
+    <Image
+      src={data.icon}
+      alt={data.iconAlt}
+      width={112}
+      height={112}
+      densities={[1, 2]}
+      loading="eager"
+      class="app-hero__icon"
+      data-vt={`${app.id}-icon`}
+    />
+
+    <h1 id="app-title" class="app-hero__name">
+      <AppWordmark app={app} data-vt={`${app.id}-name`} />
+    </h1>
+    <p class="app-hero__tagline">{data.tagline}</p>
+
+    <div class="app-hero__cta">
+      {
+        data.status === 'live' && data.playStoreUrl ? (
+          <a class="app-hero__play" href={data.playStoreUrl} rel="noopener">
+            <Icon name="google-play" size="1.25rem" />
+            <span>Get it on Google Play</span>
+          </a>
+        ) : (
+          <p class="app-hero__status">{STATUS_LABEL[data.status]}</p>
+        )
+      }
+      <p class="app-hero__meta label">
+        {data.category}
+        <span aria-hidden="true"> · </span>
+        <span translate="no">{data.packageId}</span>
+      </p>
+    </div>
+  </div>
+  <div class="app-hero__sentinel" data-header-sentinel></div>
+</section>
+
+<style>
+  .app-hero {
+    position: relative;
+    isolation: isolate;
+    color: var(--app-text);
+    padding-top: calc(var(--header-h) + env(safe-area-inset-top) + var(--s-7));
+    padding-bottom: clamp(var(--s-7), 8vw, var(--s-9));
+  }
+  .app-hero__surface {
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    background: var(--app-bg);
+    border-bottom: 1px solid var(--app-border);
+  }
+  .app-hero__inner {
+    display: grid;
+    justify-items: start;
+    gap: var(--s-5);
+  }
+  .app-hero__crumbs {
+    display: flex;
+    gap: var(--s-2);
+    color: var(--app-text-2);
+  }
+  .app-hero__crumbs a {
+    color: var(--app-text-2);
+  }
+  .app-hero__crumbs a:hover {
+    color: var(--app-text);
+  }
+  .app-hero__icon {
+    width: clamp(5rem, 4rem + 3vw, 7rem);
+    height: auto;
+    aspect-ratio: 1;
+    border-radius: 22%;
+    box-shadow: 0 0 0 1px var(--app-border);
+    margin-top: var(--s-5);
+  }
+  .app-hero__name {
+    font-size: clamp(3rem, 1.6rem + 6vw, 7rem);
+    line-height: 1;
+  }
+  .app-hero__tagline {
+    font-family: var(--font-display);
+    font-size: var(--step-2);
+    font-weight: 600;
+    letter-spacing: -0.02em;
+    line-height: 1.15;
+    max-width: 22ch;
+  }
+  .app-hero__cta {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--s-3) var(--s-5);
+    margin-top: var(--s-3);
+  }
+  .app-hero__status,
+  .app-hero__play {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--s-2);
+    min-height: 3rem;
+    padding: 0 var(--s-5);
+    border-radius: var(--r-pill);
+    font-weight: 500;
+  }
+  .app-hero__status {
+    border: 1px solid var(--app-border);
+    color: var(--app-text);
+  }
+  .app-hero__play {
+    background: var(--app-accent);
+    color: var(--app-on-accent);
+    text-decoration: none;
+  }
+  .app-hero__meta {
+    color: var(--app-text-2);
+  }
+  .app-hero__sentinel {
+    position: absolute;
+    bottom: 0;
+    width: 1px;
+    height: 1px;
+  }
+</style>

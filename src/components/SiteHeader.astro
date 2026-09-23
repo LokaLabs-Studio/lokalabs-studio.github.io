@@ -1,0 +1,151 @@
+---
+import BrandMark from './BrandMark.astro';
+import ThemeToggle from './ThemeToggle.astro';
+
+interface Props {
+  over?: 'brand' | 'app' | 'none';
+  current?: string;
+}
+const { over = 'none', current } = Astro.props;
+const path = Astro.url.pathname;
+
+const links = [
+  { href: '/apps/', label: 'Apps' },
+  { href: '/support/', label: 'Support' },
+  { href: '/legal/', label: 'Legal', wide: true },
+];
+const isCurrent = (href: string) => (current ? current === href : path === href || path.startsWith(href));
+---
+
+<header class="site-header" data-over={over} data-solid={over === 'none' ? '' : undefined} data-site-header>
+  <div class="site-header__inner container">
+    <a class="site-header__brand" href="/" aria-label="Loka Labs home">
+      <BrandMark size="nav" />
+    </a>
+    <nav class="site-header__nav" aria-label="Main">
+      <ul role="list">
+        {
+          links.map((l) => (
+            <li class:list={{ 'is-wide': l.wide }}>
+              <a href={l.href} aria-current={isCurrent(l.href) ? 'page' : undefined}>
+                {l.label}
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+      <ThemeToggle />
+    </nav>
+  </div>
+</header>
+
+<style>
+  .site-header {
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    height: var(--header-h);
+    padding-top: env(safe-area-inset-top);
+    box-sizing: content-box;
+    color: var(--ink);
+    view-transition-name: site-header;
+  }
+  .site-header::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: color-mix(in srgb, var(--bg) 88%, transparent);
+    -webkit-backdrop-filter: saturate(1.4) blur(14px);
+    backdrop-filter: saturate(1.4) blur(14px);
+    border-bottom: 1px solid var(--line);
+    opacity: 0;
+    transition: opacity var(--dur-base) var(--ease-out);
+  }
+  .site-header[data-solid]::before {
+    opacity: 1;
+  }
+
+  .site-header:is([data-over='brand'], [data-over='app']) {
+    margin-bottom: calc(-1 * (var(--header-h) + env(safe-area-inset-top)));
+  }
+  .site-header[data-over='brand']:not([data-solid]) {
+    --ink: var(--on-brand);
+    --link: var(--on-brand);
+    --focus: var(--on-brand);
+    --mark-heavy: var(--on-brand);
+    --mark-light: var(--on-brand);
+  }
+  .site-header[data-over='app']:not([data-solid]) {
+    --ink: var(--app-text);
+    --link: var(--app-text);
+    --focus: var(--app-accent);
+    --mark-heavy: var(--app-text);
+    --mark-light: var(--app-text-2);
+  }
+
+  .site-header__inner {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--s-4);
+    height: 100%;
+  }
+
+  .site-header__brand {
+    display: inline-flex;
+    align-items: center;
+    min-height: 2.75rem;
+    text-decoration: none;
+    color: inherit;
+  }
+
+  .site-header__nav {
+    display: flex;
+    align-items: center;
+    gap: var(--s-1);
+  }
+  .site-header__nav ul {
+    display: flex;
+    gap: var(--s-1);
+  }
+  .site-header__nav a {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    min-height: 2.75rem;
+    padding-inline: var(--s-3);
+    font-size: var(--step--1);
+    font-weight: 500;
+    color: var(--ink);
+    text-decoration: none;
+    border-radius: var(--r-pill);
+    transition: background-color var(--dur-fast) ease;
+  }
+  .site-header__nav a:hover {
+    background: color-mix(in srgb, currentColor 9%, transparent);
+  }
+  .site-header__nav a[aria-current='page']::after {
+    content: '';
+    position: absolute;
+    left: var(--s-3);
+    right: var(--s-3);
+    bottom: 0.55rem;
+    height: 1.5px;
+    background: currentColor;
+  }
+
+  @media (max-width: 29.99rem) {
+    .is-wide {
+      display: none;
+    }
+    .site-header__nav a {
+      padding-inline: var(--s-2);
+    }
+  }
+</style>
+
+<script>
+  import { initHeader } from '../scripts/nav';
+  initHeader();
+</script>
