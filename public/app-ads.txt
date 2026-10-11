@@ -1,1 +1,2 @@
 # app-ads.txt for Loka Labs
+google.com, pub-6460714675496509, DIRECT, f08c47fec0942fa0
