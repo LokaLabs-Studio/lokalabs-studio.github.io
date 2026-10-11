@@ -81,12 +81,12 @@
   }
 
   .on-app {
-    color-scheme: dark;
+    color-scheme: var(--app-scheme, dark);
     --ink: var(--app-text);
     --ink-2: var(--app-text-2);
     --line: var(--app-border);
-    --link: var(--app-accent);
-    --focus: var(--app-accent);
+    --link: var(--app-accent-text);
+    --focus: var(--app-accent-text);
     --mark-heavy: var(--app-text);
     --mark-light: var(--app-text-2);
   }

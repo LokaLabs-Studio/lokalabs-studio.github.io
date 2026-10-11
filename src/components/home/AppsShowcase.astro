@@ -4,6 +4,8 @@ import AppCard from '../apps/AppCard.astro';
 import { getApps } from '../../lib/apps';
 
 const apps = await getApps();
+// one app gets the wide card plus the "next up" teaser; more sit side by side
+const solo = apps.length === 1;
 ---
 
 <section class="showcase" aria-labelledby="apps-title">
@@ -15,7 +17,7 @@ const apps = await getApps();
       </p>
     </div>
 
-    <div class="bento" data-reveal>
+    <div class:list={['bento', { 'bento--solo': solo }]} data-reveal>
       {
         apps.map((app) => (
           <div class="bento__main" data-stagger>
@@ -23,12 +25,19 @@ const apps = await getApps();
           </div>
         ))
       }
-      <aside class="bento__next" data-stagger aria-label="What’s next">
-        <p class="label">Next up</p>
-        <p class="bento__next-title">In the lab now.</p>
-        <p class="bento__next-body">Another app you’d normally rent. No date and no hype until it’s ready to keep.</p>
-        <span class="bento__bars" aria-hidden="true"><i></i><i></i></span>
-      </aside>
+      {
+        solo && (
+          <aside class="bento__next" data-stagger aria-label="What’s next">
+            <p class="label">Next up</p>
+            <p class="bento__next-title">In the lab now.</p>
+            <p class="bento__next-body">Another app you’d normally rent. No date and no hype until it’s ready to keep.</p>
+            <span class="bento__bars" aria-hidden="true">
+              <i />
+              <i />
+            </span>
+          </aside>
+        )
+      }
     </div>
   </div>
 </section>
@@ -113,6 +122,9 @@ const apps = await getApps();
       justify-self: end;
     }
     .bento {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+    .bento--solo {
       grid-template-columns: 2fr 1fr;
     }
   }

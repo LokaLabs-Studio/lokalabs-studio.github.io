@@ -26,19 +26,28 @@ const apps = defineCollection({
         playStoreUrl: z.url().optional(),
         order: z.number().int(),
         theme: z.object({
+          /** The app's own look: decides how site tokens inside its blocks resolve. */
+          scheme: z.enum(['light', 'dark']).default('dark'),
           bg: hex,
           surface: hex,
           border: hex,
           text: hex,
           textSecondary: hex,
+          /** Fills: the Play button, highlights. */
           accent: hex,
           onAccent: hex,
+          /** Accent for links and focus when the fill is too light to read as text. Defaults to accent. */
+          accentText: hex.optional(),
+          /** Colour of the lockup glyph. Defaults to accent. */
+          mark: hex.optional(),
         }),
         icon: image(),
         iconAlt: z.string(),
         featureGraphic: image().optional(),
         featureGraphicAlt: z.string().optional(),
         facts: z.array(z.string()).min(1).max(4),
+        /** What's free, for the money section: "Every training feature is free". */
+        free: z.string(),
         docs: z.array(z.enum(DOC_KINDS)).nonempty(),
       })
       .refine((d) => d.status !== 'live' || d.playStoreUrl, {
@@ -67,7 +76,7 @@ const faq = defineCollection({
   loader: glob({ base: './src/content/faq', pattern: '*/*.md' }),
   schema: z.object({
     question: z.string(),
-    group: z.enum(['studio', 'liftlab']),
+    group: z.enum(['studio', 'liftlab', 'listlab']),
     order: z.number(),
   }),
 });

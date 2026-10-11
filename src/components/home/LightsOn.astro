@@ -1,6 +1,10 @@
 ---
 import StaggerHeading from '../StaggerHeading.astro';
 import MoneyLedger from '../apps/MoneyLedger.astro';
+import { docHref, getApps } from '../../lib/apps';
+
+const withPolicy = (await getApps()).filter((a) => a.data.docs.includes('privacy'));
+const sep = (i: number) => (i === 0 ? '' : i === withPolicy.length - 1 ? ' and ' : ', ');
 ---
 
 <section class="lights" aria-labelledby="lights-title">
@@ -13,7 +17,7 @@ import MoneyLedger from '../apps/MoneyLedger.astro';
     </div>
 
     <div class="lights__table">
-      <MoneyLedger caption="How LiftLab is paid for" />
+      <MoneyLedger />
       <div class="lights__never" data-reveal>
         <p class="label">What we won’t do</p>
         <ul role="list">
@@ -23,9 +27,18 @@ import MoneyLedger from '../apps/MoneyLedger.astro';
         </ul>
       </div>
       <p class="lights__foot">
-        The ad comes from Google’s ad SDK, which is part of the app. The <a href="/apps/liftlab/privacy/"
-          ><span translate="no">LiftLab</span> privacy policy</a
-        >{' '}explains exactly what it can see.
+        The ad comes from Google’s ad SDK, which is part of each app. The privacy policies for{' '}
+        {
+          withPolicy.map((a, i) => (
+            <>
+              {sep(i)}
+              <a href={docHref(a.id, 'privacy')} translate="no">
+                {a.data.name}
+              </a>
+            </>
+          ))
+        }{' '}
+        explain exactly what it can see.
       </p>
     </div>
   </div>

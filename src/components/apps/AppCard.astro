@@ -103,7 +103,7 @@ const href = `/apps/${app.id}/`;
     outline: none;
   }
   .app-card__link:focus-visible::after {
-    outline: 2px solid var(--app-accent);
+    outline: 2px solid var(--app-accent-text);
     outline-offset: 4px;
   }
 
@@ -130,7 +130,7 @@ const href = `/apps/${app.id}/`;
     gap: var(--s-2);
     margin-top: var(--s-4);
     font-weight: 500;
-    color: var(--app-accent);
+    color: var(--app-accent-text);
   }
   .app-card :global(.app-card__arrow) {
     transition: transform var(--dur-base) var(--ease-out);

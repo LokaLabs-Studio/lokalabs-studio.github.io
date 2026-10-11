@@ -59,9 +59,9 @@ const { data } = app;
     <div class="container app-money__inner">
       <div class="app-money__head" data-reveal>
         <h2 id="money-title">How <span translate="no">{data.name}</span> is paid for</h2>
-        <p>Every training feature is free. These are the only ways money changes hands, and both are optional.</p>
+        <p>{data.free}. These are the only ways money changes hands, and both are optional.</p>
       </div>
-      <MoneyLedger caption={`How ${data.name} is paid for`} />
+      <MoneyLedger caption={`How ${data.name} is paid for`} free={data.free} />
     </div>
   </section>
 </BaseLayout>

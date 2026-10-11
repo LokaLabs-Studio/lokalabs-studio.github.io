@@ -1,13 +1,15 @@
 ---
 interface Props {
   caption?: string;
+  /** What's free in this app; the home page leaves it out and talks about all of them. */
+  free?: string;
 }
-const { caption = 'How LiftLab is paid for' } = Astro.props;
+const { caption = 'How our apps are paid for', free = 'Every feature in every app is free' } = Astro.props;
 
 const rows = [
   {
     what: 'Using the app',
-    you: 'Nothing. Every training feature is free.',
+    you: `Nothing. ${free}.`,
     us: 'Nothing.',
   },
   {

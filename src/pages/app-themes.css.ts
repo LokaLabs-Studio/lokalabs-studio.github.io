@@ -5,6 +5,7 @@ export const GET: APIRoute = async () => {
   const apps = await getCollection('apps');
   const rules = apps.flatMap(({ id, data: { theme: t } }) => [
     `[data-app-theme="${id}"] {`,
+    `  --app-scheme: ${t.scheme};`,
     `  --app-bg: ${t.bg};`,
     `  --app-surface: ${t.surface};`,
     `  --app-border: ${t.border};`,
@@ -12,6 +13,8 @@ export const GET: APIRoute = async () => {
     `  --app-text-2: ${t.textSecondary};`,
     `  --app-accent: ${t.accent};`,
     `  --app-on-accent: ${t.onAccent};`,
+    `  --app-accent-text: ${t.accentText ?? t.accent};`,
+    `  --app-mark: ${t.mark ?? t.accent};`,
     `}`,
     ...['surface', 'icon', 'name'].map(
       (part) => `[data-vt="${id}-${part}"] { view-transition-name: ${id}-${part}; }`,

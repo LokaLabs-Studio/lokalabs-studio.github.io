@@ -32,8 +32,14 @@ const lockups = import.meta.glob<string>('/src/content/apps/*/lockup.svg', {
   eager: true,
 });
 
+let lockupCount = 0;
+
 export function lockupSvg(appId: string): string {
   const svg = lockups[`/src/content/apps/${appId}/lockup.svg`];
   if (!svg) throw new Error(`[apps] missing src/content/apps/${appId}/lockup.svg`);
-  return svg.replace('<svg ', '<svg aria-hidden="true" focusable="false" ');
+  // a mark can show up twice on one page, so ids inside it (masks) get a suffix
+  const n = ++lockupCount;
+  return svg
+    .replace('<svg ', '<svg aria-hidden="true" focusable="false" ')
+    .replace(/(id="|url\(#)([\w-]+)/g, `$1$2-${n}`);
 }

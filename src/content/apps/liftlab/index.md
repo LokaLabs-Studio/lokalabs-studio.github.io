@@ -23,6 +23,7 @@ facts:
   - 870+ exercises, fully offline
   - Plans around your recovery
   - 8 languages
+free: Every training feature is free
 docs: [privacy, terms, delete-data]
 ---
 

@@ -2,12 +2,13 @@
 import { getCollection, render } from 'astro:content';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import Icon from '../components/Icon.astro';
+import { getApps } from '../lib/apps';
 import { EMAIL_PARTS, SITE } from '../lib/site';
 
 const groups = [
-  { id: 'studio', title: 'About Loka Labs' },
-  { id: 'liftlab', title: 'LiftLab' },
-] as const;
+  { id: 'studio', title: 'About Loka Labs', isApp: false },
+  ...(await getApps()).map((a) => ({ id: a.id, title: a.data.name, isApp: true })),
+];
 
 const faqs = await getCollection('faq');
 const byGroup = await Promise.all(
@@ -54,7 +55,7 @@ const bugHref = `mailto:${SITE.email}?subject=${encodeURIComponent(bugSubject)}&
       {
         byGroup.map((g) => (
           <section class="faq__group" aria-labelledby={`faq-${g.id}`}>
-            <h2 id={`faq-${g.id}`} class="faq__title" translate={g.id === 'liftlab' ? 'no' : undefined}>
+            <h2 id={`faq-${g.id}`} class="faq__title" translate={g.isApp ? 'no' : undefined}>
               {g.title}
             </h2>
             <div class="faq__list">
